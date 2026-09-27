@@ -9,14 +9,14 @@ const io = socketIo(server);
 // Servir los archivos estáticos (tu frontend)
 app.use(express.static('public'));
 
-// Manejar conexión de sockets
+// Manejar conexiones de Socket.IO
 io.on('connection', (socket) => {
     console.log('Un usuario se ha conectado');
 
     // Escuchar un mensaje del cliente
     socket.on('sendMessage', (message) => {
         console.log('Mensaje recibido:', message);
-        // Enviar el mensaje a todos los clientes
+        // Enviar el mensaje a todos los clientes conectados
         io.emit('newMessage', message);
     });
 
@@ -26,7 +26,10 @@ io.on('connection', (socket) => {
     });
 });
 
-// Iniciar el servidor
-server.listen(3000, () => {
-    console.log('Servidor corriendo en http://localhost:3000');
+// Render proporciona el puerto mediante la variable de entorno PORT.
+// En local seguimos usando 3000.
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
